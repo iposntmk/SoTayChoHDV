@@ -30,19 +30,44 @@ Push code đã được commit, workflow sẽ tự động chạy. Kiểm tra t�
 
 ---
 
-## 🔥 Bước 2: Deploy Firebase Rules
+## 🔥 Bước 2: Enable Firebase Authentication
 
-### 2.1. Cài Firebase CLI
+### 2.1. Enable Sign-in Methods
+1. Vào [Firebase Console](https://console.firebase.google.com/)
+2. Chọn project **pivotal-pursuit-464813-v1** (hoặc project của bạn)
+3. Click **Authentication** → Tab **Sign-in method**
+
+### 2.2. Enable Google Sign-in
+1. Tìm **Google** trong danh sách providers
+2. Click vào **Google**
+3. Toggle **Enable**
+4. Chọn **Project support email** (email của bạn)
+5. Click **Save**
+
+### 2.3. Enable Email/Password
+1. Ở cùng trang **Sign-in method**
+2. Tìm **Email/Password**
+3. Click vào **Email/Password**
+4. Toggle **Enable**
+5. Click **Save**
+
+> **Lưu ý**: Nếu không enable các sign-in methods, bạn sẽ gặp lỗi `auth/operation-not-allowed` khi đăng nhập.
+
+---
+
+## 🔥 Bước 3: Deploy Firebase Rules
+
+### 3.1. Cài Firebase CLI
 ```bash
 npm install -g firebase-tools
 ```
 
-### 2.2. Login Firebase
+### 3.2. Login Firebase
 ```bash
 firebase login
 ```
 
-### 2.3. Init Firebase Project
+### 3.3. Init Firebase Project
 ```bash
 firebase init
 ```
@@ -54,16 +79,16 @@ Chọn:
 - Firestore rules: `firestore.rules` (đã có sẵn)
 - Storage rules: `storage.rules` (đã có sẵn)
 
-### 2.4. Deploy Rules
+### 3.4. Deploy Rules
 ```bash
 firebase deploy --only firestore:rules,storage:rules
 ```
 
 ---
 
-## 👤 Bước 3: Setup Admin User
+## 👤 Bước 4: Setup Admin User
 
-### 3.1. Tạo user đầu tiên
+### 4.1. Tạo user đầu tiên
 1. Truy cập website: https://iposntmk.github.io/SoTayChoHDV/
 2. Click **Đăng nhập** → Đăng ký tài khoản mới hoặc dùng Google
 3. Copy **UID** của user:
@@ -71,21 +96,21 @@ firebase deploy --only firestore:rules,storage:rules
    - Chọn project **pivotal-pursuit-464813-v1**
    - Authentication → Users → Copy UID của user bạn vừa tạo
 
-### 3.2. Thêm vào admin_allowlist
+### 4.2. Thêm vào admin_allowlist
 1. Vào [Firestore Console](https://console.firebase.google.com/project/pivotal-pursuit-464813-v1/firestore)
 2. Tạo collection mới: `admin_allowlist`
 3. Thêm document:
-   - Document ID: **UID đã copy ở bước 3.1**
+   - Document ID: **UID đã copy ở bước 4.1**
    - Field: `active` (boolean) = `true`
 4. Refresh website, bạn sẽ thấy menu "Master Data" xuất hiện
 
 ---
 
-## 📝 Bước 4: Tạo Master Data
+## 📝 Bước 5: Tạo Master Data
 
 Sau khi có quyền admin, vào trang **Master Data** và tạo:
 
-### 4.1. Provinces (Tỉnh/Thành)
+### 5.1. Provinces (Tỉnh/Thành)
 Ví dụ:
 - Thừa Thiên Huế
 - Đà Nẵng
@@ -93,12 +118,12 @@ Ví dụ:
 - Hội An
 - ...
 
-### 4.2. Provider Kinds (đã có sẵn trong code)
+### 5.2. Provider Kinds (đã có sẵn trong code)
 - lodging: Nhà nghỉ
 - fnb: F&B
 - souvenir: Lưu niệm
 
-### 4.3. Room Types (Loại phòng)
+### 5.3. Room Types (Loại phòng)
 Ví dụ:
 - Đơn
 - Đôi
@@ -114,6 +139,7 @@ Ví dụ:
 - [ ] Thêm 7 secrets vào GitHub Actions
 - [ ] Kiểm tra workflow chạy thành công (Actions tab)
 - [ ] Truy cập được website: https://iposntmk.github.io/SoTayChoHDV/
+- [ ] Enable Firebase Authentication (Email/Password + Google)
 - [ ] Deploy Firebase Rules (firestore + storage)
 - [ ] Tạo user đầu tiên
 - [ ] Thêm UID vào `admin_allowlist`
@@ -192,11 +218,16 @@ npm run preview
 - Đợi 2-3 phút để GitHub Pages propagate
 - Kiểm tra Settings → Pages có base URL đúng không
 
-### 3. Firebase rules permission denied
+### 3. Lỗi `auth/operation-not-allowed` khi đăng nhập
+- Chắc chắn đã enable Email/Password và Google trong Firebase Authentication
+- Vào Firebase Console → Authentication → Sign-in method
+- Enable Email/Password và Google provider
+
+### 4. Firebase rules permission denied
 - Chắc chắn đã deploy rules: `firebase deploy --only firestore:rules,storage:rules`
 - Kiểm tra trong Firebase Console → Firestore/Storage → Rules tab
 
-### 4. Không thấy menu Master Data
+### 5. Không thấy menu Master Data
 - Kiểm tra UID đã add vào `admin_allowlist` chưa
 - Field `active` phải là `true`
 - Refresh lại trang
