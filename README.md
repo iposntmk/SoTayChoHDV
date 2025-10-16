@@ -32,76 +32,21 @@ src/
 
 ## ✅ Đã hoàn thành
 
-1. **Project Setup** - Vite + React + TypeScript + TailwindCSS
-2. **Firebase Configuration** - Auth, Firestore, Storage
-3. **Security Rules** - `firestore.rules` & `storage.rules`
-4. **Authentication** - Email/Password + Google Sign-in
-5. **Public Catalog** - Hiển thị, lọc, tìm kiếm, phân trang nhà cung cấp
-6. **Detail Page** - Xem chi tiết đầy đủ thông tin
-7. **Responsive UI** - Mobile-first design
+1. **Project Setup** - Vite + React + TypeScript + TailwindCSS ✅
+2. **Firebase Configuration** - Auth, Firestore, Storage ✅
+3. **Security Rules** - `firestore.rules` & `storage.rules` ✅
+4. **Authentication** - Email/Password + Google Sign-in ✅
+5. **Public Catalog** - Hiển thị, lọc, tìm kiếm, phân trang nhà cung cấp ✅
+6. **Detail Page** - Xem chi tiết đầy đủ thông tin ✅
+7. **User Dashboard** - Quản lý bài của user (CRUD) ✅
+8. **Provider Form** - Create/Edit với validation & image upload ✅
+9. **Master Data** - Admin CRUD (provinces, room types) ✅
+10. **GitHub Actions** - Auto deploy workflow ✅
+11. **Responsive UI** - Mobile-first design ✅
 
-## 🚧 Cần hoàn thiện
+## 🚧 Cần làm để deploy
 
-### 1. Dashboard (User)
-**File**: `src/pages/DashboardPage.tsx`
-
-Cần implement:
-- Lấy danh sách providers của user hiện tại
-- Filter theo loại (lodging/fnb/souvenir)
-- Nút "Tạo mới" → `/dashboard/new`
-- Nút "Sửa" → `/dashboard/edit/:id`
-- Nút "Xóa" với confirmation
-
-```typescript
-// Query example:
-const q = query(
-  collection(db, 'providers'),
-  where('ownerId', '==', user.uid),
-  orderBy('updatedAt', 'desc')
-)
-```
-
-### 2. Provider Form (Create/Edit)
-**File**: `src/pages/ProviderFormPage.tsx`
-
-Cần implement:
-- Form với React Hook Form
-- Validation theo loại provider
-- Upload ảnh lên Storage với resize (dùng `imageUtils.ts`)
-- Create: set `ownerId`, `createdBy`, `updatedBy`, `isApproved = true`
-- Update: chỉ update nếu `ownerId === user.uid`
-
-**Flow upload ảnh**:
-```typescript
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { resizeImage, generateImageFilename } from '@/utils/imageUtils'
-
-// 1. Resize ảnh
-const resized = await resizeImage(file, 1200, 1200, 0.85)
-
-// 2. Upload
-const filename = generateImageFilename(file.name)
-const storageRef = ref(storage, `provider-images/${providerId}/${filename}`)
-await uploadBytes(storageRef, resized)
-
-// 3. Get URL
-const url = await getDownloadURL(storageRef)
-```
-
-### 3. Master Data Management (Admin)
-**File**: `src/pages/MasterDataPage.tsx`
-
-Cần implement CRUD cho 3 collections:
-- `master_provinces` - Tỉnh/Thành
-- `master_provider_kinds` - Loại nhà cung cấp (fixed: lodging/fnb/souvenir)
-- `master_room_types` - Loại phòng
-
-**Kiểm tra admin**:
-```typescript
-const { isAdmin } = useAuth() // Đã có sẵn trong AuthContext
-```
-
-### 4. Deploy Firebase Rules
+### 1. Deploy Firebase Rules
 
 Cần deploy 2 files rules:
 
@@ -124,7 +69,14 @@ firebase init
 firebase deploy --only firestore:rules,storage:rules
 ```
 
-### 5. Setup Admin User
+### 2. Setup GitHub Secrets & Deploy
+
+Làm theo file **SETUP.md** để:
+- Bật GitHub Pages
+- Thêm 7 secrets cho GitHub Actions
+- Trigger workflow deploy
+
+### 3. Setup Admin User
 
 Sau khi có user đầu tiên, cần thêm vào `admin_allowlist`:
 
@@ -229,16 +181,22 @@ File `vite.config.ts` đã được cấu hình với `base: '/SoTayChoHDV/'` đ
 
 ## 🎯 Checklist Acceptance
 
+### Code Implementation
 - [x] Public xem/lọc/tìm/phân trang
 - [x] Hiển thị tác giả & cập nhật lần cuối
 - [x] Xem chi tiết provider
 - [x] Login với Email/Google
-- [x] GitHub Actions workflow cho auto deploy
-- [ ] User tạo/sửa/xóa bài của mình
-- [ ] Upload ảnh hoạt động
-- [ ] Admin quản lý master data
+- [x] User tạo/sửa/xóa bài của mình
+- [x] Upload ảnh với resize
+- [x] Admin quản lý master data
+- [x] GitHub Actions workflow
+
+### Deployment (Làm theo SETUP.md)
 - [ ] Deploy Firebase Rules
-- [ ] Setup GitHub Secrets & deploy app
+- [ ] Setup GitHub Secrets
+- [ ] Deploy app lên GitHub Pages
+- [ ] Tạo admin user đầu tiên
+- [ ] Tạo master data
 
 ## 📚 Tài liệu tham khảo
 
