@@ -30,6 +30,37 @@ src/
 └── utils/          # Utilities (formatUtils, imageUtils)
 ```
 
+## ✨ Tính năng chính
+
+### 🌐 Public Features (Không cần đăng nhập)
+- **Catalog Page**: Xem danh sách nhà cung cấp với phân trang
+- **Advanced Filters**: Lọc theo loại dịch vụ (Nhà nghỉ, F&B, Lưu niệm), tỉnh/thành
+- **Search**: Tìm kiếm theo tên, địa chỉ, ghi chú
+- **Detail View**: Xem chi tiết đầy đủ thông tin, gallery ảnh
+- **Author Info**: Hiển thị người tạo và cập nhật lần cuối
+
+### 🔐 User Features (Yêu cầu đăng nhập)
+- **Authentication**: Đăng nhập bằng Email/Password hoặc Google
+- **My Dashboard**: Quản lý danh sách bài đăng của mình
+- **Create Provider**: Tạo nhà cung cấp mới với upload ảnh (resize tự động)
+- **Edit/Delete**: Sửa/xóa bài đăng của mình
+- **Form Validation**: Validate dữ liệu với React Hook Form
+
+### 👑 Admin Features
+- **Master Data Management**: Quản lý danh mục tỉnh/thành, loại phòng
+- **Admin Allowlist**: Phân quyền admin qua Firestore collection
+
+### 🎨 UI/UX
+- **Responsive Design**: Mobile-first, tương thích tất cả thiết bị
+- **Modern UI**: TailwindCSS với Lucide Icons
+- **Loading States**: Skeleton loading, spinners
+- **Error Handling**: Toast notifications, validation errors
+
+### 🔒 Security
+- **Firestore Rules**: Chỉ owner mới sửa/xóa bài của mình
+- **Storage Rules**: Validate image type (jpeg, png, webp) & size < 5MB
+- **Protected Routes**: Guard admin và user routes
+
 ## ✅ Đã hoàn thành
 
 1. **Project Setup** - Vite + React + TypeScript + TailwindCSS ✅
@@ -86,6 +117,73 @@ Sau khi có user đầu tiên, cần thêm vào `admin_allowlist`:
 // Tạo document với ID = uid của admin
 // Field: active = true
 ```
+
+## 📸 Screenshots & Demo
+
+### Demo URL
+🔗 **Live Demo**: https://iposntmk.github.io/SoTayChoHDV/
+
+### Screenshots
+
+#### Trang chủ - Public Catalog
+- Danh sách nhà cung cấp với filters và search
+- Phân trang, hiển thị thông tin tóm tắt
+- Responsive layout cho mobile và desktop
+
+#### Chi tiết nhà cung cấp
+- Gallery ảnh với lightbox
+- Thông tin đầy đủ: Liên hệ, địa chỉ, loại phòng, giá...
+- Hiển thị người tạo và cập nhật lần cuối
+
+#### My Dashboard
+- Danh sách bài đăng của user
+- Nút tạo mới, sửa, xóa
+- Trạng thái duyệt (isApproved)
+
+#### Provider Form
+- Form tạo/sửa với validation
+- Upload nhiều ảnh với preview
+- Tự động resize ảnh trước khi upload
+
+#### Master Data (Admin)
+- Tab quản lý Tỉnh/Thành
+- Tab quản lý Loại phòng
+- CRUD operations với confirmation
+
+> **Lưu ý**: Screenshots chi tiết có thể được thêm vào thư mục `/docs/screenshots/` sau khi deploy
+
+## 📖 Hướng dẫn sử dụng
+
+### Cho người dùng thông thường
+
+#### 1. Xem danh sách nhà cung cấp
+- Truy cập trang chủ để xem tất cả nhà cung cấp
+- Sử dụng bộ lọc (Loại dịch vụ, Tỉnh/Thành) để thu hẹp kết quả
+- Dùng ô tìm kiếm để tìm theo tên, địa chỉ, ghi chú
+- Click vào thẻ nhà cung cấp để xem chi tiết
+
+#### 2. Đăng ký và đăng nhập
+- Click "Đăng nhập" ở góc trên phải
+- Chọn "Đăng ký" để tạo tài khoản mới
+- Hoặc đăng nhập nhanh bằng Google
+
+#### 3. Quản lý nhà cung cấp của bạn
+- Sau khi đăng nhập, vào "My Dashboard"
+- Click "Tạo mới" để thêm nhà cung cấp
+- Điền thông tin: Loại dịch vụ, Tên, Tỉnh/Thành, SĐT, Địa chỉ...
+- Upload ảnh (tự động resize về 1200px, < 5MB)
+- Click vào các card để sửa hoặc xóa
+
+### Cho Admin
+
+#### 1. Được cấp quyền Admin
+- Yêu cầu admin hiện tại thêm UID của bạn vào collection `admin_allowlist`
+- Refresh trang để thấy menu "Master Data"
+
+#### 2. Quản lý Master Data
+- Vào "Master Data" từ menu
+- Tab "Tỉnh/Thành": Thêm/Sửa/Xóa các tỉnh thành
+- Tab "Loại phòng": Quản lý các loại phòng (Đơn, Đôi, Suite...)
 
 ## 🔧 Development
 

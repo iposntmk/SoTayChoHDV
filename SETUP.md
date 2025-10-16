@@ -122,13 +122,37 @@ Ví dụ:
 ## 🔧 Development
 
 ### Local Development
+
+#### 1. Clone repository
 ```bash
-# Install dependencies
+git clone https://github.com/iposntmk/SoTayChoHDV.git
+cd SoTayChoHDV
+```
+
+#### 2. Install dependencies
+```bash
 npm install
+```
 
-# Run dev server
+#### 3. Setup Environment Variables
+Tạo file `.env.local` tại root của project:
+
+```bash
+# Firebase Configuration
+VITE_FIREBASE_API_KEY=AIzaSyDYG4cIO9xQfALP52XTTe8E9NdFRdnVd0A
+VITE_FIREBASE_AUTH_DOMAIN=pivotal-pursuit-464813-v1.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=pivotal-pursuit-464813-v1
+VITE_FIREBASE_STORAGE_BUCKET=pivotal-pursuit-464813-v1.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=114858153501
+VITE_FIREBASE_APP_ID=1:114858153501:web:e8b33b40d607e3b06158f4
+VITE_FIREBASE_MEASUREMENT_ID=G-JWKTC5JJYQ
+```
+
+> **Lưu ý**: File `.env.local` đã được thêm vào `.gitignore`, không commit lên repository
+
+#### 4. Run dev server
+```bash
 npm run dev
-
 # Open http://localhost:5173/
 ```
 
@@ -137,6 +161,20 @@ npm run dev
 npm run build
 npm run preview
 ```
+
+### Environment Variables Explained
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `VITE_FIREBASE_API_KEY` | Firebase API key cho web app | `AIzaSy...` |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Domain cho Firebase Authentication | `project-id.firebaseapp.com` |
+| `VITE_FIREBASE_PROJECT_ID` | Firebase Project ID | `my-project-123` |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase Storage bucket URL | `project-id.appspot.com` |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Sender ID cho FCM | `123456789` |
+| `VITE_FIREBASE_APP_ID` | Firebase App ID | `1:123:web:abc123` |
+| `VITE_FIREBASE_MEASUREMENT_ID` | Google Analytics measurement ID | `G-XXXXXXXXXX` |
+
+> **Security Note**: Các Firebase config trên là client-side keys, an toàn để public. Security được đảm bảo bằng Firestore Rules và Storage Rules.
 
 ---
 
