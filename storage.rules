@@ -1,0 +1,30 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Provider images
+    match /provider-images/{providerId}/{imageId} {
+      // Public read for all images
+      allow read: if true;
+
+      // Write: must be authenticated and either:
+      // 1. Creating new provider (providerId doesn't exist yet in Firestore)
+      // 2. Owner of the provider
+      allow write: if request.auth != null && (
+        // Check if user is the owner of this provider
+        exists(/databases/(default)/documents/providers/$(providerId)) &&
+        firestore.get(/databases/(default)/documents/providers/$(providerId)).data.ownerId == request.auth.uid
+      );
+
+      // Validate file is an image and size < 5MB
+      allow write: if request.resource.size < 5 * 1024 * 1024 &&
+                      request.resource.contentType.matches('image/.*');
+    }
+
+    // Deny everything else
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
