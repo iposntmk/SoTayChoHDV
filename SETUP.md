@@ -9,17 +9,19 @@
 
 ### 1.2. Thêm Secrets cho GitHub Actions
 1. Vào **Settings** → **Secrets and variables** → **Actions**
-2. Click **New repository secret** và thêm từng secret sau:
+2. Click **New repository secret** và thêm 7 secrets sau:
 
-| Secret Name | Value |
-|------------|-------|
-| `VITE_FIREBASE_API_KEY` | `AIzaSyDYG4cIO9xQfALP52XTTe8E9NdFRdnVd0A` |
-| `VITE_FIREBASE_AUTH_DOMAIN` | `pivotal-pursuit-464813-v1.firebaseapp.com` |
-| `VITE_FIREBASE_PROJECT_ID` | `pivotal-pursuit-464813-v1` |
-| `VITE_FIREBASE_STORAGE_BUCKET` | `pivotal-pursuit-464813-v1.firebasestorage.app` |
-| `VITE_FIREBASE_MESSAGING_SENDER_ID` | `114858153501` |
-| `VITE_FIREBASE_APP_ID` | `1:114858153501:web:e8b33b40d607e3b06158f4` |
-| `VITE_FIREBASE_MEASUREMENT_ID` | `G-JWKTC5JJYQ` |
+**Lấy values từ**: Firebase Console → Project Settings → General → Your apps → SDK setup and configuration
+
+| Secret Name |
+|------------|
+| `VITE_FIREBASE_API_KEY` |
+| `VITE_FIREBASE_AUTH_DOMAIN` |
+| `VITE_FIREBASE_PROJECT_ID` |
+| `VITE_FIREBASE_STORAGE_BUCKET` |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` |
+| `VITE_FIREBASE_APP_ID` |
+| `VITE_FIREBASE_MEASUREMENT_ID` |
 
 ### 1.3. Trigger Deploy
 Push code đã được commit, workflow sẽ tự động chạy. Kiểm tra tại:
@@ -135,18 +137,20 @@ npm install
 ```
 
 #### 3. Setup Environment Variables
-Tạo file `.env.local` tại root của project:
+Tạo file `.env.local` tại root của project với nội dung:
 
 ```bash
 # Firebase Configuration
-VITE_FIREBASE_API_KEY=AIzaSyDYG4cIO9xQfALP52XTTe8E9NdFRdnVd0A
-VITE_FIREBASE_AUTH_DOMAIN=pivotal-pursuit-464813-v1.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=pivotal-pursuit-464813-v1
-VITE_FIREBASE_STORAGE_BUCKET=pivotal-pursuit-464813-v1.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=114858153501
-VITE_FIREBASE_APP_ID=1:114858153501:web:e8b33b40d607e3b06158f4
-VITE_FIREBASE_MEASUREMENT_ID=G-JWKTC5JJYQ
+VITE_FIREBASE_API_KEY=your_api_key_here
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain_here
+VITE_FIREBASE_PROJECT_ID=your_project_id_here
+VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket_here
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id_here
+VITE_FIREBASE_APP_ID=your_app_id_here
+VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id_here
 ```
+
+**Lấy values từ**: Firebase Console → Project Settings → General → Your apps → SDK setup and configuration
 
 > **Lưu ý**: File `.env.local` đã được thêm vào `.gitignore`, không commit lên repository
 

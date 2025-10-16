@@ -213,14 +213,14 @@ Website sẽ tự động deploy lên GitHub Pages thông qua GitHub Actions wor
 
 2. **Thêm Environment Secrets**:
    - Vào repository → Settings → Secrets and variables → Actions
-   - Thêm các secrets sau (dùng cho build):
-     - `VITE_FIREBASE_API_KEY`: `AIzaSyDYG4cIO9xQfALP52XTTe8E9NdFRdnVd0A`
-     - `VITE_FIREBASE_AUTH_DOMAIN`: `pivotal-pursuit-464813-v1.firebaseapp.com`
-     - `VITE_FIREBASE_PROJECT_ID`: `pivotal-pursuit-464813-v1`
-     - `VITE_FIREBASE_STORAGE_BUCKET`: `pivotal-pursuit-464813-v1.firebasestorage.app`
-     - `VITE_FIREBASE_MESSAGING_SENDER_ID`: `114858153501`
-     - `VITE_FIREBASE_APP_ID`: `1:114858153501:web:e8b33b40d607e3b06158f4`
-     - `VITE_FIREBASE_MEASUREMENT_ID`: `G-JWKTC5JJYQ`
+   - Thêm 7 secrets sau (lấy từ Firebase Console → Project Settings):
+     - `VITE_FIREBASE_API_KEY`
+     - `VITE_FIREBASE_AUTH_DOMAIN`
+     - `VITE_FIREBASE_PROJECT_ID`
+     - `VITE_FIREBASE_STORAGE_BUCKET`
+     - `VITE_FIREBASE_MESSAGING_SENDER_ID`
+     - `VITE_FIREBASE_APP_ID`
+     - `VITE_FIREBASE_MEASUREMENT_ID`
 
 3. **Workflow đã được cấu hình** tại `.github/workflows/deploy.yml`
 
