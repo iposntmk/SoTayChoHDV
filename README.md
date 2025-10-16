@@ -151,30 +151,42 @@ npm run build
 npm run preview
 ```
 
-## 🚀 Deploy lên Vercel/Netlify
+## 🚀 Deploy lên GitHub Pages (Auto Deploy)
 
-### Vercel
-```bash
-npm install -g vercel
-vercel
+Website sẽ tự động deploy lên GitHub Pages thông qua GitHub Actions workflow khi push code lên branch `main`.
+
+### Setup GitHub Pages
+
+1. **Bật GitHub Pages trong repo settings**:
+   - Vào repository → Settings → Pages
+   - Source: chọn "GitHub Actions"
+
+2. **Thêm Environment Secrets**:
+   - Vào repository → Settings → Secrets and variables → Actions
+   - Thêm các secrets sau (dùng cho build):
+     - `VITE_FIREBASE_API_KEY`: `AIzaSyDYG4cIO9xQfALP52XTTe8E9NdFRdnVd0A`
+     - `VITE_FIREBASE_AUTH_DOMAIN`: `pivotal-pursuit-464813-v1.firebaseapp.com`
+     - `VITE_FIREBASE_PROJECT_ID`: `pivotal-pursuit-464813-v1`
+     - `VITE_FIREBASE_STORAGE_BUCKET`: `pivotal-pursuit-464813-v1.firebasestorage.app`
+     - `VITE_FIREBASE_MESSAGING_SENDER_ID`: `114858153501`
+     - `VITE_FIREBASE_APP_ID`: `1:114858153501:web:e8b33b40d607e3b06158f4`
+     - `VITE_FIREBASE_MEASUREMENT_ID`: `G-JWKTC5JJYQ`
+
+3. **Workflow đã được cấu hình** tại `.github/workflows/deploy.yml`
+
+4. **Trigger Deploy**:
+   ```bash
+   git push origin main
+   ```
+
+Website sẽ tự động build và deploy. Sau khi deploy xong, truy cập tại:
+```
+https://iposntmk.github.io/SoTayChoHDV/
 ```
 
-### Netlify
-```bash
-npm install -g netlify-cli
-netlify deploy --prod
-```
+### Cấu hình Vite cho GitHub Pages
 
-**Environment Variables** (Vercel/Netlify):
-```
-VITE_FIREBASE_API_KEY=AIzaSyDYG4cIO9xQfALP52XTTe8E9NdFRdnVd0A
-VITE_FIREBASE_AUTH_DOMAIN=pivotal-pursuit-464813-v1.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=pivotal-pursuit-464813-v1
-VITE_FIREBASE_STORAGE_BUCKET=pivotal-pursuit-464813-v1.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=114858153501
-VITE_FIREBASE_APP_ID=1:114858153501:web:e8b33b40d607e3b06158f4
-VITE_FIREBASE_MEASUREMENT_ID=G-JWKTC5JJYQ
-```
+File `vite.config.ts` đã được cấu hình với `base: '/SoTayChoHDV/'` để tương thích với GitHub Pages subdirectory.
 
 ## 📝 Firestore Data Model
 
@@ -221,11 +233,12 @@ VITE_FIREBASE_MEASUREMENT_ID=G-JWKTC5JJYQ
 - [x] Hiển thị tác giả & cập nhật lần cuối
 - [x] Xem chi tiết provider
 - [x] Login với Email/Google
+- [x] GitHub Actions workflow cho auto deploy
 - [ ] User tạo/sửa/xóa bài của mình
 - [ ] Upload ảnh hoạt động
 - [ ] Admin quản lý master data
 - [ ] Deploy Firebase Rules
-- [ ] Deploy app lên Vercel/Netlify
+- [ ] Setup GitHub Secrets & deploy app
 
 ## 📚 Tài liệu tham khảo
 
