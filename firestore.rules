@@ -19,21 +19,20 @@ service cloud.firestore {
 
     // Providers collection
     match /providers/{providerId} {
-      // Public read for approved providers
-      allow read: if resource.data.isApproved == true;
+      // Public read for approved providers; owners and admins can read their own unapproved entries
+      allow read: if resource.data.isApproved == true ||
+                    isOwner(resource.data.ownerId) ||
+                    isAdmin();
 
       // Authenticated users can create providers
       allow create: if isAuthenticated() &&
                       request.resource.data.ownerId == request.auth.uid &&
-                      request.resource.data.createdAt == request.time &&
-                      request.resource.data.updatedAt == request.time &&
                       request.resource.data.createdBy.uid == request.auth.uid &&
                       request.resource.data.updatedBy.uid == request.auth.uid;
 
       // Owners can update their own providers
       allow update: if isOwner(resource.data.ownerId) &&
                       request.resource.data.ownerId == resource.data.ownerId &&
-                      request.resource.data.updatedAt == request.time &&
                       request.resource.data.updatedBy.uid == request.auth.uid;
 
       // Owners can delete their own providers
@@ -46,7 +45,7 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    match /master_provider_kinds/{kindId} {
+    match /master_provider_types/{typeId} {
       allow read: if isAdmin();
       allow write: if isAdmin();
     }
@@ -56,10 +55,39 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /master_customer_segments/{segmentId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
     // Admin allowlist - Admin only
     match /admin_allowlist/{userId} {
       allow read: if isAdmin();
       allow write: if isAdmin();
+    }
+
+    // Tourism news - Public read, Admin write
+    match /tourism_news/{newsId} {
+      allow read: if resource.data.isActive == true;
+      allow write: if isAdmin();
+    }
+
+    // Guide profiles - Public read, owner/admin write
+    match /guide_profiles/{uid} {
+      allow read: if true;
+
+      allow create: if isAdmin() ||
+                      (isAuthenticated() &&
+                       request.auth.uid == uid &&
+                       request.resource.data.userId == request.auth.uid);
+
+      allow update: if isAdmin() ||
+                      (isAuthenticated() &&
+                       request.auth.uid == uid &&
+                       resource.data.userId == request.auth.uid &&
+                       request.resource.data.userId == resource.data.userId);
+
+      allow delete: if isAdmin() || (isAuthenticated() && request.auth.uid == uid);
     }
   }
 }

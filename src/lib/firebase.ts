@@ -22,10 +22,18 @@ export const auth = getAuth(app)
 export const db = getFirestore(app)
 export const storage = getStorage(app)
 
-// Initialize analytics (only in production)
+// Initialize analytics (only in production and valid domain)
 let analytics
 if (typeof window !== 'undefined' && import.meta.env.PROD) {
-  analytics = getAnalytics(app)
+  try {
+    // Only initialize analytics on Firebase Hosting domain
+    const hostname = window.location.hostname
+    if (hostname.includes('web.app') || hostname.includes('firebaseapp.com')) {
+      analytics = getAnalytics(app)
+    }
+  } catch (error) {
+    console.warn('Analytics initialization failed:', error)
+  }
 }
 
 export { analytics }

@@ -47,7 +47,7 @@ src/
 - **Form Validation**: Validate dữ liệu với React Hook Form
 
 ### 👑 Admin Features
-- **Master Data Management**: Quản lý danh mục tỉnh/thành, loại phòng
+- **Master Data Management**: Quản lý danh mục tỉnh/thành, loại phòng, loại nhà cung cấp, dòng khách
 - **Admin Allowlist**: Phân quyền admin qua Firestore collection
 
 ### 🎨 UI/UX
@@ -71,7 +71,7 @@ src/
 6. **Detail Page** - Xem chi tiết đầy đủ thông tin ✅
 7. **User Dashboard** - Quản lý bài của user (CRUD) ✅
 8. **Provider Form** - Create/Edit với validation & image upload ✅
-9. **Master Data** - Admin CRUD (provinces, room types) ✅
+9. **Master Data** - Admin CRUD (provinces, room types, provider types, customer segments) ✅
 10. **GitHub Actions** - Auto deploy workflow ✅
 11. **Responsive UI** - Mobile-first design ✅
 
@@ -148,6 +148,8 @@ Sau khi có user đầu tiên, cần thêm vào `admin_allowlist`:
 #### Master Data (Admin)
 - Tab quản lý Tỉnh/Thành
 - Tab quản lý Loại phòng
+- Tab quản lý Loại nhà cung cấp (tên hiển thị)
+- Tab quản lý Dòng khách (tên, đặc thù)
 - CRUD operations với confirmation
 
 > **Lưu ý**: Screenshots chi tiết có thể được thêm vào thư mục `/docs/screenshots/` sau khi deploy
@@ -184,6 +186,8 @@ Sau khi có user đầu tiên, cần thêm vào `admin_allowlist`:
 - Vào "Master Data" từ menu
 - Tab "Tỉnh/Thành": Thêm/Sửa/Xóa các tỉnh thành
 - Tab "Loại phòng": Quản lý các loại phòng (Đơn, Đôi, Suite...)
+- Tab "Loại nhà cung cấp": Tùy chỉnh tên hiển thị cho từng loại hình dịch vụ
+- Tab "Dòng khách": Ghi nhận nhóm khách (ví dụ: Khách Do Thái) và đặc thù phục vụ
 
 ## 🔧 Development
 
@@ -200,6 +204,23 @@ npm run build
 # Preview production build
 npm run preview
 ```
+
+### 🔔 Email nhắc nhở thẻ HDV
+
+Cloud Function `notifyExpiringGuide` sẽ tự động gửi email khi thẻ HDV còn ≤30 ngày hết hạn.
+
+1. Tạo tài khoản SendGrid (hoặc dịch vụ SMTP tương đương) và lấy API Key.
+2. Cấu hình biến môi trường cho Firebase Functions:
+
+   ```bash
+   firebase functions:config:set sendgrid.api_key="<SENDGRID_API_KEY>" sendgrid.from_email="noreply@example.com"
+   ```
+
+3. Deploy functions:
+
+   ```bash
+   firebase deploy --only functions
+   ```
 
 ## 🚀 Deploy lên GitHub Pages (Auto Deploy)
 

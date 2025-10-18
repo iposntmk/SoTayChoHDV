@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { collection, query, where, orderBy, getDocs, deleteDoc, doc } from 'firebase/firestore'
 import { db } from '@/lib/firebase'
 import { useAuth } from '@/contexts/AuthContext'
-import { Provider, ProviderKind } from '@/types'
-import { formatDate, formatPrice } from '@/utils/formatUtils'
+import { Provider } from '@/types'
+import { formatDate } from '@/utils/formatUtils'
 import Layout from '@/components/Layout'
 import Loading from '@/components/Loading'
+import Combobox from '@/components/Combobox'
+import { Hotel, UtensilsCrossed, Gift, Building2, Tag } from 'lucide-react'
+import { useProviderTypes } from '@/hooks/useProviderTypes'
 
 export default function DashboardPage() {
   const { user } = useAuth()
-  const navigate = useNavigate()
   const [providers, setProviders] = useState<Provider[]>([])
   const [loading, setLoading] = useState(true)
-  const [filterKind, setFilterKind] = useState<ProviderKind | ''>('')
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [filterKind, setFilterKind] = useState<string>('')
+  const { providerTypeOptions, providerTypeMap } = useProviderTypes()
 
   useEffect(() => {
     loadProviders()
@@ -57,16 +59,51 @@ export default function DashboardPage() {
     try {
       await deleteDoc(doc(db, 'providers', id))
       setProviders((prev) => prev.filter((p) => p.id !== id))
-      setDeleteId(null)
     } catch (error) {
       console.error('Error deleting provider:', error)
       alert('Lỗi khi xóa. Vui lòng thử lại.')
     }
   }
 
-  const getKindLabel = (kind: ProviderKind) => {
-    const labels = { lodging: 'Nhà nghỉ', fnb: 'F&B', souvenir: 'Lưu niệm' }
-    return labels[kind]
+  const getKindLabel = (kind: string | undefined) => {
+    if (!kind) return 'Không xác định'
+    return providerTypeMap[kind]?.label || kind
+  }
+
+  const getKindIcon = (kind: string | undefined) => {
+    if (kind === 'lodging') return Hotel
+    if (kind === 'fnb') return UtensilsCrossed
+    if (kind === 'souvenir') return Gift
+    return Building2
+  }
+
+  const getKindColor = (kind: string | undefined) => {
+    if (kind === 'lodging') {
+      return {
+        badge: 'bg-blue-100 text-blue-800 border-blue-200',
+        cardBorder: 'border-l-4 border-l-blue-500',
+        placeholder: 'bg-gradient-to-br from-blue-400 to-blue-600',
+      }
+    }
+    if (kind === 'fnb') {
+      return {
+        badge: 'bg-orange-100 text-orange-800 border-orange-200',
+        cardBorder: 'border-l-4 border-l-orange-500',
+        placeholder: 'bg-gradient-to-br from-orange-400 to-red-500',
+      }
+    }
+    if (kind === 'souvenir') {
+      return {
+        badge: 'bg-purple-100 text-purple-800 border-purple-200',
+        cardBorder: 'border-l-4 border-l-purple-500',
+        placeholder: 'bg-gradient-to-br from-purple-400 to-pink-500',
+      }
+    }
+    return {
+      badge: 'bg-gray-100 text-gray-700 border-gray-200',
+      cardBorder: 'border-l-4 border-l-gray-400',
+      placeholder: 'bg-gradient-to-br from-gray-400 to-gray-600',
+    }
   }
 
   if (loading) return <Loading />
@@ -90,19 +127,16 @@ export default function DashboardPage() {
 
         {/* Filter */}
         <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+            <Tag className="w-4 h-4" />
             Lọc theo loại:
           </label>
-          <select
+          <Combobox
+            options={[{ value: '', label: 'Tất cả loại' }, ...providerTypeOptions]}
             value={filterKind}
-            onChange={(e) => setFilterKind(e.target.value as ProviderKind | '')}
-            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Tất cả</option>
-            <option value="lodging">Nhà nghỉ</option>
-            <option value="fnb">F&B</option>
-            <option value="souvenir">Lưu niệm</option>
-          </select>
+            onChange={setFilterKind}
+            placeholder="Chọn loại..."
+          />
         </div>
 
         {/* List */}
@@ -140,34 +174,48 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {providers.map((provider) => (
-                    <tr key={provider.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          {provider.mainImageUrl && (
-                            <img
-                              src={provider.mainImageUrl}
-                              alt={provider.name}
-                              className="h-10 w-10 rounded object-cover mr-3"
-                            />
-                          )}
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">
-                              {provider.name}
-                            </div>
-                            {provider.address && (
-                              <div className="text-sm text-gray-500 truncate max-w-xs">
-                                {provider.address}
+                  {providers.map((provider) => {
+                    const KindIcon = getKindIcon(provider.kind)
+                    const kindColor = getKindColor(provider.kind)
+
+                    return (
+                      <tr key={provider.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center">
+                            {provider.mainImageUrl ? (
+                              <div className="relative mr-3">
+                                <img
+                                  src={provider.mainImageUrl}
+                                  alt={provider.name}
+                                  className="h-10 w-10 rounded object-cover"
+                                />
+                                <div className={`absolute -top-1 -right-1 ${kindColor} border rounded-full p-0.5`}>
+                                  <KindIcon className="w-3 h-3" />
+                                </div>
+                              </div>
+                            ) : (
+                              <div className={`h-10 w-10 rounded ${kindColor} border flex items-center justify-center mr-3`}>
+                                <KindIcon className="w-5 h-5" />
                               </div>
                             )}
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">
+                                {provider.name}
+                              </div>
+                              {provider.address && (
+                                <div className="text-sm text-gray-500 truncate max-w-xs">
+                                  {provider.address}
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded">
-                          {getKindLabel(provider.kind)}
-                        </span>
-                      </td>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium ${kindColor} border rounded-full`}>
+                            <KindIcon className="w-3.5 h-3.5" />
+                            {getKindLabel(provider.kind)}
+                          </span>
+                        </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {provider.province}
                       </td>
@@ -193,9 +241,10 @@ export default function DashboardPage() {
                         >
                           Xóa
                         </button>
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>

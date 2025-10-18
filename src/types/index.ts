@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase/firestore'
 
 // Provider types
-export type ProviderKind = 'lodging' | 'fnb' | 'souvenir'
+export type ProviderKind = string
 
 export interface UserInfo {
   uid: string
@@ -21,6 +21,8 @@ export interface Provider {
   mainImageUrl?: string
   images?: string[]
   notes?: string
+  websiteUrl?: string
+  googleMapsUrl?: string
 
   // Lodging specific
   roomTypes?: string[]
@@ -45,10 +47,10 @@ export interface MasterProvince {
   code?: string
 }
 
-export interface MasterProviderKind {
+export interface MasterProviderType {
   id?: string
-  key: ProviderKind
-  label: string
+  name: string
+  description?: string | null
 }
 
 export interface MasterRoomType {
@@ -64,4 +66,58 @@ export interface ProviderFilters {
   priceRange?: 'low' | 'medium' | 'high'
   targetAudience?: string
   searchQuery?: string
+}
+
+// Tourism News/Stats
+export interface TourismNews {
+  id?: string
+  title: string
+  description?: string
+  period: string // e.g., "2024", "Q1 2025", "Jan 2025"
+  visitors?: number // số lượng khách
+  growth?: number // tăng trưởng % (có thể âm)
+  sourceUrl?: string
+  imageUrl?: string
+  createdAt: Timestamp
+  updatedAt: Timestamp
+  isActive: boolean
+}
+
+// User Stats
+export interface UserStats {
+  uid: string
+  displayName: string
+  email?: string
+  photoURL?: string
+  providerCount: number
+  joinedAt: Timestamp
+  lastActive?: Timestamp
+}
+
+// Guide Profile
+export interface GuideProfile {
+  id?: string
+  userId: string // Link to auth user
+  fullName: string // Họ và tên
+  email?: string | null // Email liên hệ
+  phone?: string | null // Số điện thoại
+  cardNumber: string // Số thẻ
+  expiryDate: Timestamp // Ngày hết hạn
+  issuingPlace: string // Nơi cấp thẻ
+  cardType: 'domestic' | 'international' // Loại thẻ: Nội địa/Quốc tế
+  languages?: string[] | null // Ngoại ngữ sử dụng
+  lastExpiryNotificationAt?: Timestamp | null
+  experienceYears: number // Kinh nghiệm (số năm)
+  createdAt: Timestamp
+  updatedAt: Timestamp
+  createdBy: UserInfo
+  updatedBy: UserInfo
+}
+
+export interface HueGuideArticle {
+  title: string
+  url: string
+  summary?: string
+  publishedAt?: string
+  imageUrl?: string | null
 }

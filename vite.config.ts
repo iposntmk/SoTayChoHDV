@@ -10,7 +10,6 @@ export default defineConfig(({ mode }) => ({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // Use base path only for production (GitHub Pages)
-  // In dev mode, use root path '/'
-  base: mode === 'production' ? '/SoTayChoHDV/' : '/',
+  // Use root path for Firebase Hosting
+  base: '/',
 }))
